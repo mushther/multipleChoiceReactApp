@@ -1,10 +1,20 @@
 import { Box, Heading, Text } from '@chakra-ui/react'
 import React from 'react'
 import { MdOutlineClass } from 'react-icons/md'
+import { useNavigate } from 'react-router-dom';
 
-const CardClass = ({ title }) => {
+const CardClass = ({ title, topic }) => {
+    const navigate = useNavigate();
+
+    const handleTopic = (topic) => {
+        localStorage.setItem("topic", topic);
+        localStorage.setItem("difficulty", "medium");
+        localStorage.setItem("limite", 10);
+        navigate("/mcqpage")
+    }
     return (
         <Box
+            onClick={() => handleTopic(topic)}
             display={'flex'}
             flexDirection='column'
             alignItems='center'

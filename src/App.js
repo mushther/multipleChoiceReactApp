@@ -1,6 +1,6 @@
 import './App.css';
 import Navbar from './components/Navbar';
-import Home from './pages/Home';
+import Footer from './pages/Footer';
 import AllRouting from './Router/AllRouting';
 
 function App() {
@@ -8,6 +8,7 @@ function App() {
     <div className="App">
      <Navbar/>
      <AllRouting/>
+     <Footer/>
     </div>
   );
 }

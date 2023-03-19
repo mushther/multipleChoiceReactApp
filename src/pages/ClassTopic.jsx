@@ -1,28 +1,50 @@
 import { Box, Button, Container, FormControl, FormLabel, Heading, Image, Select } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
 import { CiLocationArrow1 } from 'react-icons/ci'
 import { useNavigate } from 'react-router-dom'
 
-const initialData = {
-    class: "",
-    subject: ""
-}
+
 const ClassTopic = () => {
     const navigate = useNavigate()
-    const [formData, setFormData] = useState(initialData);
+    const [formData, setFormData] = useState("");
+    const [category, setCategory] = useState([]);
+    const [difficulty, setDifficulty] = useState('');
+    const [limite, setLimite] = useState('');
 
     const handleChange = (e) => {
+        const { value } = e.target;
+        setFormData(value);
+    }
+    const handleChange1 = (e) => {
         const { value, name } = e.target;
-        setFormData({ ...formData, [name]: value })
+        if (name === "limite") {
+            setLimite(value);
+        } else if (name === 'difficulty') {
+            setDifficulty(value);
+        }
     }
 
     const handleTopic = () => {
-        localStorage.setItem("topic", (formData.class + formData.subject));
+        localStorage.setItem("topic", formData);
+        localStorage.setItem("difficulty", difficulty);
+        localStorage.setItem("limite", limite);
         navigate("/mcqpage")
     }
 
-
-
+    const getCategory = () => {
+        axios.get(`https://the-trivia-api.com/api/categories`).then((res) => {
+            setCategory(res.data)
+        })
+    }
+    useEffect(() => {
+        getCategory();
+    }, [])
+    /*for (let key in category) {
+        console.log(key);
+    }*/
+    //console.log(formData);
+    //console.log(category[`${formData}`]);
     return (
         <Container mt={'73px'} bg={'#d1d5d630'} maxW='container.lg' p='50px'>
             <Box display={'flex'} justifyContent='space-between' alignItems={'center'}>
@@ -31,15 +53,25 @@ const ClassTopic = () => {
             </Box>
             <Box mt={'50px'}>
                 <FormControl >
-                    <FormLabel>Chose Class *</FormLabel>
-                    <Select name='class' onChange={handleChange} placeholder='Select Your Class'>
-                        <option name='class' value={'10th'}>Class 10th</option>
-                        <option name='class' value={'9th'}>Class 9th</option>
+                    <FormLabel>Chose Subject *</FormLabel>
+                    <Select name='class' onChange={handleChange} placeholder='Select Your Subject'>
+                        {
+                            Object.entries(category).map(([key, val]) =>
+                                <option name='class' key={key} value={val}>{key}</option>
+                            )
+                        }
                     </Select>
-                    <FormLabel mt={'10px'}>Chose Subject *</FormLabel>
-                    <Select name='subject' onChange={handleChange} placeholder='Select Your Subject'>
-                        <option name='subject' value={'physics'}>Physics</option>
-                        <option name='subject' value={'math'}>Math</option>
+                    <FormLabel>Difficulty *</FormLabel>
+                    <Select name='difficulty' onChange={handleChange1} placeholder='Select Your Difficulty'>
+                        <option value={'easy'}>Easy</option>
+                        <option value={'medium'}>Medium</option>
+                        <option value={'hard'}>Hard</option>
+                    </Select>
+                    <FormLabel>Limite *</FormLabel>
+                    <Select name='limite' onChange={handleChange1} placeholder='Select Your Limite'>
+                        <option value={"5"}>05</option>
+                        <option value={'10'}>10</option>
+                        <option value={'15'}>15</option>
                     </Select>
                     <Button p={3}
                         position='none'

@@ -3,11 +3,13 @@ import React from 'react'
 import { FaArrowCircleUp } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom';
 
-const CardSkill = ({ title }) => {
+const CardSkill = ({ title, topic }) => {
     const navigate = useNavigate();
 
     const handleTopic = (topic) => {
         localStorage.setItem("topic", topic);
+        localStorage.setItem("difficulty", "medium");
+        localStorage.setItem("limite", 10);
         navigate("/mcqpage")
     }
     return (
@@ -36,7 +38,7 @@ const CardSkill = ({ title }) => {
                     _hover={{
                         bgGradient: 'linear(to-r, red.500, yellow.500)',
                     }}
-                    onClick={() => { handleTopic(title) }}
+                    onClick={() => { handleTopic(topic) }}
                 >Start Quiz</Button>
             </Box>
             <Text fontSize={'5xl'}><FaArrowCircleUp /></Text>

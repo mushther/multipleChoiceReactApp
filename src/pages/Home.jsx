@@ -1,6 +1,7 @@
 
-import { Box, Container, Flex, Heading, Button, Text, Grid, Image } from '@chakra-ui/react'
-import React, { useState } from 'react'
+import { Box, Container, Flex, Heading, Button, Grid, Image } from '@chakra-ui/react'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
 import { CiLocationArrow1 } from "react-icons/ci";
 import { Link } from 'react-router-dom';
 import CardClass from '../components/CardClass';
@@ -8,6 +9,15 @@ import CardSkill from '../components/CardSkill';
 
 
 const Home = () => {
+    const [category, setCategory] = useState([]);
+    const getCategory = () => {
+        axios.get(`https://the-trivia-api.com/api/categories`).then((res) => {
+            setCategory(res.data)
+        })
+    }
+    useEffect(() => {
+        getCategory();
+    }, [])
 
     return (
         <Container mt={'73px'} bg={'#d1d5d630'} maxW='container.lg' p='50px'>
@@ -39,24 +49,17 @@ const Home = () => {
                 <Image display={'block'} m='auto' w={'50%'} alignItems={'end'} src='https://linkpicture.com/q/b83feaa4-7ca3-4b55-a7a0-95992022c42c-6a4271bb-removebg-preview.png' />
             </Box>
             <Flex mt={'50px'} justifyContent={'space-between'} >
-                <CardSkill title={'general_knowledge'} />
-                <CardSkill title={'Basic Mathematics'} />
-                <CardSkill title={'Current Affairs'} />
+                <CardSkill title={'General Knowledge'} topic={'general_knowledge'} />
+                <CardSkill title={'Society & Culture'} topic={'society_and_culture'} />
+                <CardSkill title={'Sport & Leisure'} topic={'sport_and_leisure'} />
             </Flex>
-            <Heading mt='30px' mb='30px' fontWeight={'bold'} textAlign={'start'}>Class Wise</Heading>
+            <Heading mt='30px' mb='30px' fontWeight={'bold'} textAlign={'start'}>Topic Wise</Heading>
             <Grid gridTemplateColumns={'repeat(4,1fr)'} gap='15px'>
-                <CardClass title={'Class 1st'} />
-                <CardClass title={'Class 2nd'} />
-                <CardClass title={'Class 3rd'} />
-                <CardClass title={'Class 4th'} />
-                <CardClass title={'Class 5th'} />
-                <CardClass title={'Class 6th'} />
-                <CardClass title={'Class 7th'} />
-                <CardClass title={'Class 8th'} />
-                <CardClass title={'Class 9th'} />
-                <CardClass title={'Class 10th'} />
-                <CardClass title={'Class 1th'} />
-                <CardClass title={'Class 12th'} />
+                {
+                    Object.entries(category).map(([key, val]) =>
+                        <CardClass title={key} topic={val} />
+                    )
+                }
             </Grid >
 
         </Container>
